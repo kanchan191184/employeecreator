@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import EmployeeForm, { type EmployeeFormValues } from "./EmployeeForm";
 import { getEmployeeById, updateEmployee } from "../services/employees";
+import { toast } from "react-toastify";
 
 export default function EmployeeUpdateForm({ 
     id, 
@@ -22,11 +23,10 @@ export default function EmployeeUpdateForm({
       const handleFormSubmit = async (data: EmployeeFormValues) => {
         try {
             await updateEmployee(id, data);
-            alert("Employee updated successfully!");
+            toast.success("Employee Updated successfully!");
             onSuccess();
             } catch (error) {
-            console.error("Error updating employee:", error);
-            alert("Failed to update employee.");
+            toast.error("Error updating employee");
             }
     };
 

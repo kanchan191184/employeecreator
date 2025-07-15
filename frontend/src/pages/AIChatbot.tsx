@@ -3,6 +3,11 @@ import styles from './AIChatbot.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faXmark } from '@fortawesome/free-solid-svg-icons';
 
+const FAQS = [
+  { label: 'Company policies', value: 'company policies' },
+  { label: 'Employee benefits', value: 'employee benefits' },
+  { label: 'Contact HR', value: 'contact hr' },
+];
 
 const AIChatbot: FC = () => {
   const [open, setOpen] = useState(false);
@@ -14,22 +19,26 @@ const AIChatbot: FC = () => {
     setOpen(o => !o);
   }, []);
 
+  const fetchResponseWithPrompt = useCallback(async (customPrompt: string) => {
+  setLoading(true);
+  try {
+    const encoded = encodeURIComponent(customPrompt);
+    const res = await fetch(`http://localhost:8080/api/openai/${encoded}`);
+    if (!res.ok) throw new Error(`Status ${res.status}`);
+    const text = await res.text();
+    setResponse(text);
+  } catch (err: any) {
+    setResponse(`Error: ${err.message}`);
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
   const fetchResponse = useCallback(async () => {
     if (!prompt.trim()) return;
-    setLoading(true);
-    setResponse('Loading...');
-    try {
-      const encoded = encodeURIComponent(prompt);
-      const res = await fetch(`http://localhost:8080/api/openai/${encoded}`);
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      const text = await res.text();
-      setResponse(text);
-    } catch (err: any) {
-      setResponse(`Error: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  }, [prompt]);
+    fetchResponseWithPrompt(prompt);
+  }, [prompt, fetchResponseWithPrompt]);
+
 
   return (
     <>
@@ -59,11 +68,22 @@ const AIChatbot: FC = () => {
             </button>
             <div className={styles.output}>
               <b>FAQs</b>
-              <ul>
-                <li><a href="https://nology.io/about-us/" target='_blank'>1.Company policies</a></li>
-                <li><a href="https://nology.io/become-a-developer/" target='_blank'>2.Employee Benefits</a></li>
-                <li><a href="https://nology.io/contact/" target='_blank'>3.Contact HR</a></li>
-              </ul>
+
+                <div className={styles.faqList}>
+                  {FAQS.map((f, i) => (
+                    <button
+                      key={i}
+                      className={styles.faqBtn}
+                      onClick={() => {
+                        setPrompt(f.value);
+                        setResponse('Loading...');
+                        fetchResponseWithPrompt(f.value);
+                      }}
+                    >
+                      {i + 1}. {f.label}
+                    </button>
+                  ))}
+                </div>
               
               <textarea
                 value= {response || 'Responses will appear here.'}

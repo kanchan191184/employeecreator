@@ -3,6 +3,7 @@ import type { EmployeeFormValues } from "../components/EmployeeForm";
 import styles from './EmployeeAddPage.module.scss';
 import { addEmployee } from "../services/employees";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EmployeeAddPage: React.FC = () => {
 
@@ -12,13 +13,11 @@ const EmployeeAddPage: React.FC = () => {
       
           try {
             await addEmployee(data);
-            alert("Employee added successfully!");
+            toast.success("Employee added successfully!");
             navigate("/"); // redirect to employee list or home
           } catch (error) {
-            console.error("Error adding employee:", error);
-            alert("Failed to add employee.");
+            toast.error("Failed to add employee.");
           }
-
     };
 
   return (
