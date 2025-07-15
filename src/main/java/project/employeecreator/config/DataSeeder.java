@@ -39,7 +39,7 @@ public class DataSeeder {
                 emp2.setPhoneNumber("40477009111");
                 emp2.setAddress("12 Carter road");
                 emp2.setJobType(Employee.JobType.CONTRACT);
-                emp2.setStartDate("2025-01-15");
+                emp2.setStartDate("2023-01-15");
                 emp2.setFinishDate("2025-08-15");
                 emp2.setJobStatus(Employee.JobStatus.FULL_TIME);
 
