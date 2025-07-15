@@ -3,6 +3,7 @@ import './App.css'
 import EmployeeListPage from './pages/EmployeeListPage'
 import EmployeeAddPage from './pages/EmployeeAddPage'
 import EmployeeUpdateDetailsPage from './pages/EmployeeUpdatePage'
+import AIChatbot from './pages/AIChatbot'
 // import LoginPage from './pages/LoginPage'
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-          {/* <Route path="/auth" element={<LoginPage />} /> */}
+          <Route path="/chatbot" element={<AIChatbot />} />
           <Route path='/addEmployee' element={<EmployeeAddPage /> } />
           <Route path='/updateEmployee/:id' element={<EmployeeUpdateDetailsPage/> } />
           <Route path="/" element={<EmployeeListPage />} />

@@ -3,6 +3,7 @@ import EmployeeCard from "../components/EmployeeCard";
 import styles from "./EmployeeListPage.module.scss";
 import { useNavigate } from "react-router-dom";
 import { type Employee, getEmployees, deleteEmployee } from "../services/employees";
+import AIChatbot from "./AIChatbot";
 
 const EmployeeListPage: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -32,7 +33,7 @@ const EmployeeListPage: React.FC = () => {
     };
 
   return (
-       <div className={styles.wrapper}>
+      <div className={styles.wrapper}>
       <div className={styles.headerRow}>
         <h1 className={styles.heading}>Employee's List</h1>
         <button className={styles.addBtn} onClick={() => navigate("/addEmployee")}>
@@ -55,6 +56,7 @@ const EmployeeListPage: React.FC = () => {
           ))
         )}
       </div>
+      <AIChatbot />
     </div>
   );
 };
