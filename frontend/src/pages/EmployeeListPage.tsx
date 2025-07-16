@@ -24,6 +24,10 @@ const EmployeeListPage: React.FC = () => {
      navigate(`/updateEmployee/${id}`);
     };
 
+    const handleDetails = (id: number) => {
+      navigate(`/employeeDetails/${id}`);
+    }
+    
     const handleRemove = (id: number) => {
        deleteEmployee(id)
       .then(() => setEmployees((prev) => prev.filter((emp) => emp.id !== id)))
@@ -52,6 +56,7 @@ const EmployeeListPage: React.FC = () => {
               employee={emp}
               onEdit={handleEdit}
               onRemove={handleRemove}
+              onDetails={handleDetails}
             />
           ))
         )}

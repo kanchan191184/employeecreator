@@ -45,7 +45,7 @@
   margin-left: 2rem;
 }
 
-.edit, .remove {
+.edit, .remove, .details {
   padding: 0.5em 1.2em;
   border-radius: 6px;
   border: none;
@@ -71,6 +71,16 @@
   border: 1px solid #d32f2f;
   &:hover {
     background: #d32f2f;
+    color: #fff;
+  }
+}
+
+.details {
+  background: rgb(217, 234, 217);
+  color: green;
+  border: 1px solid green;
+  &:hover {
+    background: green;
     color: #fff;
   }
 }

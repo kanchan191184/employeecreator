@@ -7,30 +7,21 @@ export interface Employee {
     lastName: string;
     jobType: "CONTRACT" | "PERMANENT";
     startDate: string;
+    finishDate: string;
     email: string;
+    address: string;
+    phoneNumber: string;
+    jobStatus: "FULL_TIME" | "PART_TIME";
 }
 
 interface EmployeeCardProps { 
     employee: Employee;
-    onEdit: (id: number) => void;
-    onRemove: (id: number) => void;
-    onDetails: (id: number) => void;
+    id: number,
+    onBack : () => void;
 }
 
-function getYearsFromStart(startDate: string): number {
-  const start = new Date(startDate);
-  const now = new Date();
-  let years = now.getFullYear() - start.getFullYear();
-  const m = now.getMonth() - start.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < start.getDate())) {
-    years--;
-  }
-  return years;
-}
+const EmployeeDetailsCard: React.FC<EmployeeCardProps> = ({ employee, onBack }) => {
 
-const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, onEdit, onRemove, onDetails }) => {
-
-    const years = getYearsFromStart(employee.startDate);
     return (
            <div className={styles.card}>
       <div className={styles.info}>
@@ -43,19 +34,31 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee, onEdit, onRemove,
         <div>
           <span className={styles.label}>Job Type:</span>{" "}
           {employee.jobType === "CONTRACT" ? "Contract" : "Permanent"}{" "}
-          <span className={styles.years}>({years} year{years !== 1 ? "s" : ""})</span>
         </div>
         <div>
           <span className={styles.label}>Email:</span> {employee.email}
         </div>
+         <div>
+          <span className={styles.label}>Address:</span> {employee.address}
+        </div>
+         <div>
+          <span className={styles.label}>Phone Number:</span> {employee.phoneNumber}
+        </div>
+         <div>
+          <span className={styles.label}>Start Date:</span> {employee.startDate}
+        </div>
+         <div>
+          <span className={styles.label}>Finish Date:</span> {employee.finishDate}
+        </div>
+         <div>
+          <span className={styles.label}>Job Status:</span> {employee.jobStatus}
+        </div>
       </div>
       <div className={styles.actions}>
-        <button className={styles.edit} onClick={() => onEdit(employee.id)}>Edit</button>
-        <button className={styles.remove} onClick={() => onRemove(employee.id)}>Remove</button>
-        <button className={styles.details} onClick={() => onDetails(employee.id)}>Details</button>
+        <button className={styles.edit} onClick={() => onBack()}>Back</button>
       </div>
     </div>
     );
 };
 
-export default EmployeeCard;
+export default EmployeeDetailsCard;
