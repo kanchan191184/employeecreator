@@ -27,7 +27,7 @@ const EmployeeListPage: React.FC = () => {
     const handleDetails = (id: number) => {
       navigate(`/employeeDetails/${id}`);
     }
-    
+
     const handleRemove = (id: number) => {
        deleteEmployee(id)
       .then(() => setEmployees((prev) => prev.filter((emp) => emp.id !== id)))
@@ -42,6 +42,9 @@ const EmployeeListPage: React.FC = () => {
         <h1 className={styles.heading}>Employee's List</h1>
         <button className={styles.addBtn} onClick={() => navigate("/addEmployee")}>
           Add Employee
+        </button>
+        <button className={styles.addBtn} onClick={() => navigate("/jobStats")}>
+          Employee Job Stats
         </button>
       </div>
       <div className={styles.list}>

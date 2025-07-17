@@ -43,8 +43,34 @@ public class DataSeeder {
                 emp2.setFinishDate("2025-08-15");
                 emp2.setJobStatus(Employee.JobStatus.FULL_TIME);
 
+                Employee emp3 = new Employee();
+                emp3.setFirstName("David");
+                emp3.setMiddleName("Boss");
+                emp3.setLastName("Thomas");
+                emp3.setEmail("david@dummy.com");
+                emp3.setPhoneNumber("40477009567");
+                emp3.setAddress("12 Market road");
+                emp3.setJobType(Employee.JobType.PERMANENT);
+                emp3.setStartDate("2024-01-15");
+                emp3.setFinishDate("2024-06-15");
+                emp3.setJobStatus(Employee.JobStatus.PART_TIME);
+
+                Employee emp4 = new Employee();
+                emp4.setFirstName("Maria");
+                emp4.setMiddleName("");
+                emp4.setLastName("Johnson");
+                emp4.setEmail("maria@dummy.com");
+                emp4.setPhoneNumber("40477005641");
+                emp4.setAddress("21 Carter road");
+                emp4.setJobType(Employee.JobType.PERMANENT);
+                emp4.setStartDate("2023-01-15");
+                emp4.setFinishDate("2025-08-15");
+                emp4.setJobStatus(Employee.JobStatus.FULL_TIME);
+
                 employeeRepository.save(emp1);
                 employeeRepository.save(emp2);
+                employeeRepository.save(emp3);
+                employeeRepository.save(emp4);
             };
         }
 }

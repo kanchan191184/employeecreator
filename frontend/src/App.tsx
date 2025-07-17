@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import EmployeeUpdatePage from './pages/EmployeeUpdatePage';
 import EmployeeDetailsPage from './pages/EmployeeDetailsPage';
+import EmployeeJobStatsPage from './pages/EmployeeJobStatsPage';
 
 // import LoginPage from './pages/LoginPage'
 
@@ -21,6 +22,7 @@ function App() {
           <Route path='/addEmployee' element={<EmployeeAddPage /> } />
           <Route path='/updateEmployee/:id' element={<EmployeeUpdatePage/> } />
           <Route path='/employeeDetails/:id' element={<EmployeeDetailsPage />} />
+          <Route path='/jobStats' element={<EmployeeJobStatsPage />} />
           <Route path="/" element={<EmployeeListPage />} />
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,38 @@
+
+.pageWrapper {
+  display: flex;
+  justify-content: center; // horizontal centering
+  height: 80vh;       
+}
+
+.container {
+    width: 500px;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+  h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    color: #333;
+  }
+
+.edit{
+    padding: 0.5em 1.2em;
+    margin-top: 4em;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #e3f1ff;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+    &:hover {
+        background: #1976d2;
+        color: #fff;
+    }
+}
