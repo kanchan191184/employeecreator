@@ -1,13 +1,17 @@
-import styles from "./EmployeeCard.module.scss";
+import styles from "./EmployeeDetailsCard.module.scss";
+
+export interface JobRecord {
+  id: number;
+  jobType: 'PERMANENT' | 'CONTRACT';
+  startDate: string;    
+  endDate?: string;    // nullable
+}
 
 export interface Employee {
     id: number;
     firstName: string;
     middleName?: string;
     lastName: string;
-    jobType: "CONTRACT" | "PERMANENT";
-    startDate: string;
-    finishDate: string;
     email: string;
     address: string;
     phoneNumber: string;
@@ -16,46 +20,55 @@ export interface Employee {
 
 interface EmployeeCardProps { 
     employee: Employee;
-    id: number,
+    jobRecords: JobRecord[];
     onBack : () => void;
 }
 
-const EmployeeDetailsCard: React.FC<EmployeeCardProps> = ({ employee, onBack }) => {
+const formatDate = (d: string | undefined) => d ? new Date(d).toLocaleDateString() : 'Present';
+
+const EmployeeDetailsCard: React.FC<EmployeeCardProps> = ({ employee, jobRecords, onBack }) => {
 
     return (
-           <div className={styles.card}>
-      <div className={styles.info}>
-        <div className={styles.name}>
-          <span className={styles.label}>Name:</span>
-          {employee.firstName}{" "}
-          {employee.middleName && <span>{employee.middleName} </span>}
-          {employee.lastName}
-        </div>
-        <div>
-          <span className={styles.label}>Job Type:</span>{" "}
-          {employee.jobType === "CONTRACT" ? "Contract" : "Permanent"}{" "}
-        </div>
-        <div>
-          <span className={styles.label}>Email:</span> {employee.email}
-        </div>
-         <div>
-          <span className={styles.label}>Address:</span> {employee.address}
-        </div>
-         <div>
-          <span className={styles.label}>Phone Number:</span> {employee.phoneNumber}
-        </div>
-         <div>
-          <span className={styles.label}>Start Date:</span> {employee.startDate}
-        </div>
-         <div>
-          <span className={styles.label}>Finish Date:</span> {employee.finishDate}
-        </div>
-         <div>
-          <span className={styles.label}>Job Status:</span> {employee.jobStatus}
-        </div>
+      <div className={styles.card}>
+      {/* Basic info */}
+      <div className={styles.infoBlock}>
+        <h2 className={styles.name}>
+          {employee.firstName} {employee.middleName ?? ''} {employee.lastName}
+        </h2>
+        <div><span className={styles.label}>Email: </span> {employee.email}</div>
+        <div><span className={styles.label}>Phone: </span> {employee.phoneNumber}</div>
+        <div><span className={styles.label}>Address: </span> {employee.address}</div>
+        <div><span className={styles.label}>Job Status: </span>{employee.jobStatus}</div>
       </div>
+
+      {/* Job history */}
+      <div className={styles.jobHistoryBlock}>
+        <h3>Job History</h3>
+        <table className={styles.jobTable}>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {jobRecords.map((jr) => (
+              <tr key={jr.id}>
+                <td>{jr.jobType.charAt(0) + jr.jobType.slice(1).toLowerCase()}</td>
+                <td>{formatDate(jr.startDate)}</td>
+                <td>{formatDate(jr.endDate)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Back button */}
       <div className={styles.actions}>
-        <button className={styles.edit} onClick={() => onBack()}>Back</button>
+        <button onClick={onBack} className={styles.backButton}>
+          Back
+        </button>
       </div>
     </div>
     );

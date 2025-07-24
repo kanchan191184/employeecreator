@@ -1,13 +1,45 @@
-
 import type { EmployeeFormValues } from '../components/EmployeeForm';
 
 interface ValidationResult {
     isValid: boolean;
-    errors: Partial<Record<keyof EmployeeFormValues, string>>;
+    errors: Record<string, string>;
 }
 
-export const validateForm = (values: EmployeeFormValues) : ValidationResult => {
-    const errors: Partial<Record<keyof EmployeeFormValues, string>> = {};
+/**
+ * Maps backend error messages to form fields.
+ */
+// export const mapBackendErrors = (errorResponse: any): Record<string, string> => {
+//     const backendErrors: Record<string, string> = {};
+
+//     if (errorResponse && errorResponse.status === 400) {
+//         const { field, message } = errorResponse.data;
+//         if (field && message) {
+//             backendErrors[field] = message;
+//         }
+//     }
+//     return backendErrors;
+// };
+
+  export function mapBackendErrors(response: any): Record<string, string> {
+    try {
+      const data = response.data;
+
+      if (data.field && data.message) {
+        return {
+          [data.field]: data.message,
+        };
+      }
+
+      return {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+export const validateForm = (values: EmployeeFormValues, 
+    backendErrors: Record<string, string> = {}
+  ) : ValidationResult => {
+    const errors: Record<string, string> = { ...backendErrors};
 
     // First Name
 
@@ -43,18 +75,17 @@ export const validateForm = (values: EmployeeFormValues) : ValidationResult => {
     }
 
     // Start Date
-    if (!values.startDate) {
-      errors.startDate = 'Start date is required.';
+    if (!values.jobRecord.startDate) {
+      errors['jobRecord.startDate'] = 'Start date is required.';
     }
 
-    // finish Date
-    if (!values.finishDate) {
-      errors.finishDate = 'Finish date is required.';
+    // end Date
+    if (!values.jobRecord.endDate) {
+      errors['jobRecord.endDate'] = 'End date is required.';
     }
 
     return {
       isValid: Object.keys(errors).length === 0,
       errors,
     };
-
 }

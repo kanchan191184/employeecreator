@@ -29,7 +29,6 @@ const EmployeeBarChart: React.FC<Props> = ({ permanentCount, contractCount}) => 
         backgroundColor: ['#e8f5ddff', '#f7f6d4ff'],
         borderColor: ['#4caf50', '#f3f02dff'],
         borderWidth: 1,
-         // pixel-based bar width
         barThickness: 40,        
         maxBarThickness: 40,     // max width
       }

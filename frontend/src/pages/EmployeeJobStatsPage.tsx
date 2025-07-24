@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import EmployeeBarChart from "../components/EmployeeBarChart";
 import styles from "./EmployeeJobStatsPage.module.scss";
-import { getEmployees, type Employee } from "../services/employees";
 import { useNavigate } from "react-router-dom";
+import { getAllJobRecords } from "../services/jobRecord";
+import type { JobRecord } from "../services/employees";
 
 const EmployeeJobStatsPage: React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [jobRecords, setJobRecords] = useState<JobRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getEmployees()
-      .then(setEmployees)
+    getAllJobRecords()
+      .then(setJobRecords)
       .catch(err => {
         console.error(err);
         setError("Failed to load employees");
@@ -23,8 +24,8 @@ const EmployeeJobStatsPage: React.FC = () => {
   if (loading) return <div>Loading stats...</div>;
   if (error) return <div>{error}</div>;
 
-  const permanentCount = employees.filter(e => e.jobType === "PERMANENT").length;
-  const contractCount = employees.filter(e => e.jobType === "CONTRACT").length;
+  const permanentCount = jobRecords.filter(j => j.jobType === "PERMANENT").length;
+  const contractCount = jobRecords.filter(j => j.jobType === "CONTRACT").length;
 
   return (
     <div className={ styles.pageWrapper}>

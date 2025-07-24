@@ -1,7 +1,6 @@
 package project.employeecreator;
 
 import java.util.Map;
-
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

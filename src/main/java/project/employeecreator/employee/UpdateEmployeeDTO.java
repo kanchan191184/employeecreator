@@ -1,9 +1,10 @@
 package project.employeecreator.employee;
 
+import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import project.employeecreator.employee.Employee.JobStatus;
-import project.employeecreator.employee.Employee.JobType;
+import project.employeecreator.jobRecord.UpdateJobRecordDTO;
 
 public class UpdateEmployeeDTO {
     
@@ -26,14 +27,17 @@ public class UpdateEmployeeDTO {
     @NotBlank
     private String address;
 
-    private JobType jobType;
-
-    @NotBlank
-    private String startDate;
-
-    private String finishDate;
-
     private JobStatus jobStatus;
+
+    private List<UpdateJobRecordDTO> jobRecords;
+
+    public List<UpdateJobRecordDTO> getJobRecords() {
+        return jobRecords;
+    }
+
+    public void setJobRecords(List<UpdateJobRecordDTO> jobRecords) {
+        this.jobRecords = jobRecords;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -59,21 +63,8 @@ public class UpdateEmployeeDTO {
         return address;
     }
 
-    public JobType getJobType() {
-        return jobType;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getFinishDate() {
-        return finishDate;
-    }
-
     public JobStatus getJobStatus() {
         return jobStatus;
     }
-
     
 }

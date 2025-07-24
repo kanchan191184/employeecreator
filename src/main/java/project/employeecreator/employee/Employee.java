@@ -1,21 +1,27 @@
 package project.employeecreator.employee;
 
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import project.employeecreator.jobRecord.JobRecord;
 
 @Entity
 @Table(name="employees")
 public class Employee {
     
-    public enum JobType {
+     public enum JobType {
         PERMANENT,
-        CONTRACT,
+        CONTRACT
     }
 
     public enum JobStatus {
@@ -46,16 +52,15 @@ public class Employee {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private JobType jobType;
-
-    @Column
-    private String startDate;
-
-    @Column
-    private String finishDate;
-
-    @Enumerated(EnumType.STRING)
     private JobStatus jobStatus;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<JobRecord> jobRecords = new ArrayList<>();
+
+    public void addJobRecord(JobRecord jr) {
+        jr.setEmployee(this);
+        this.jobRecords.add(jr);
+    }
 
     public Long getId() {
         return id;
@@ -113,36 +118,20 @@ public class Employee {
         this.address = address;
     }
 
-    public JobType getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(JobType jobType) {
-        this.jobType = jobType;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getFinishDate() {
-        return finishDate;
-    }
-
-    public void setFinishDate(String finishDate) {
-        this.finishDate = finishDate;
-    }
-
     public JobStatus getJobStatus() {
         return jobStatus;
     }
 
     public void setJobStatus(JobStatus jobStatus) {
         this.jobStatus = jobStatus;
+    }
+
+    public List<JobRecord> getJobRecords() {
+        return jobRecords;
+    }
+
+    public void setJobRecords(List<JobRecord> jobRecords) {
+        this.jobRecords = jobRecords;
     }
 
 }

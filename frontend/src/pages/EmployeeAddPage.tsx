@@ -10,14 +10,31 @@ const EmployeeAddPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleFormSubmit = async (data: EmployeeFormValues) => {
-      
-          try {
-            await addEmployee(data);
+        try {
+                const normalizedJobRecord = {
+                ...data.jobRecord,
+                id: Date.now(),
+            };
+
+            const employeeData = {
+                ...data,
+                jobRecord: normalizedJobRecord,
+                jobRecords: [normalizedJobRecord], 
+            };
+            // Add a generated id to jobRecord before submitting
+            // const employeeData = {
+            //     ...data,
+            //     jobRecord: {
+            //         ...data.jobRecord,
+            //         id: Date.now(), // or use a better id generation logic if needed
+            //     }
+            // };
+            await addEmployee(employeeData);
             toast.success("Employee added successfully!");
             navigate("/"); // redirect to employee list or home
-          } catch (error) {
+        } catch (error) {
             toast.error("Failed to add employee.");
-          }
+        }
     };
 
   return (

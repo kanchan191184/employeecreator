@@ -1,63 +1,48 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+import api from "../api/api";
+
+export interface JobRecord {
+  id: number;
+  jobType: 'PERMANENT' | 'CONTRACT';
+  startDate: string;
+  endDate?: string;
+}
 
 export interface Employee {
   id: number;
   firstName: string;
   middleName?: string;
   lastName: string;
-  jobType: "CONTRACT" | "PERMANENT";
-  startDate: string;
-  finishDate: string;
   jobStatus: "FULL_TIME" | "PART_TIME";
   email: string;
   phoneNumber: string;
   address: string;
+  jobRecord: JobRecord;
+  jobRecords: JobRecord[];
 }
 
 export type EmployeeData = Omit<Employee, "id">;
 
-// Get all employees
-export const getEmployees = async (): Promise<Employee[]> => {
-  const response = await fetch(`${API_URL}/employees`, {
-  });
-  if (!response.ok) throw new Error("Failed to fetch employees");
-  return await response.json();
-};
 
-// Get employee by ID
-export const getEmployeeById = async (id: number): Promise<Employee> => {
-  const response = await fetch(`${API_URL}/employees/${id}`, {
-  });
-  if (!response.ok) throw new Error("Failed to fetch employee");
-  return await response.json();
-};
+  export const getEmployees = async (): Promise<Employee[]> => {
+    const response = await api.get<Employee[]>('/employees');
+    return response.data;
+  };
 
-// Add new employee
-export const addEmployee = async (data: EmployeeData): Promise<Employee> => {
-  const response = await fetch(`${API_URL}/employees`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error("Failed to add employee");
-  return await response.json();
-};
+  export const getEmployeeById = async (id: number): Promise<Employee> => {
+    const response = await api.get<Employee>(`/employees/${id}`);
+    return response.data;
+  };
 
-// Update employee
-export const updateEmployee = async (id: number, data: EmployeeData): Promise<Employee> => {
-  const response = await fetch(`${API_URL}/employees/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error("Failed to update employee");
-  return await response.json();
-};
+  export const addEmployee = async (data: EmployeeData): Promise<Employee> => {
+    const response = await api.post<Employee>('/employees', data);
+    return response.data;
+  };
 
-// Delete employee
-export const deleteEmployee = async (id: number): Promise<void> => {
-  const response = await fetch(`${API_URL}/employees/${id}`, {
-    method: "DELETE"
-  });
-  if (!response.ok) throw new Error("Failed to delete employee");
-};
+  export const updateEmployee = async (id: number, data: EmployeeData): Promise<Employee> => {
+    const response = await api.patch<Employee>(`/employees/${id}`, data);
+    return response.data;
+  };
+
+  export const deleteEmployee = async (id: number): Promise<void> => {
+    await api.delete(`/employees/${id}`);
+  };

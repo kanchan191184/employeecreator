@@ -7,10 +7,12 @@ const defaultValues: EmployeeFormValues = {
     email: '',
     phoneNumber: '',
     address: '',
-    jobType: 'CONTRACT',
-    startDate: '',
-    finishDate: '',
-    jobStatus: 'FULL_TIME'
+    jobStatus: 'FULL_TIME',
+    jobRecord: { // Updated to include jobRecord
+        jobType: 'CONTRACT',
+        startDate: '',
+        endDate: '', // Use endDate to match the form's structure
+    },
 };
 
 export default function EmployeeAddForm({ onFormSubmit }: { onFormSubmit: (data: EmployeeFormValues) => void }) {

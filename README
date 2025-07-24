@@ -1,91 +1,181 @@
-Employee Creator
-Introduction
-Your first step in the recruitment process is to demonstrate your understanding of writing RESTful APIs in Java and frontend using React Typescript.
+# Employee Creator Documentation
 
-When writing your code, please be mindful of the following:
+# Introduction
+The Employee Creator project is a web application designed to manage employee records. It allows users to create, list, update, and delete employees. The application consists of a Spring Boot RESTful API for the backend and a React TypeScript frontend. The project is built with a focus on production readiness, maintainability, and robustness.
 
-Your code should be production ready.
-Your code should be understandable and maintainable by other developers.
-Your code should be robust and handle error situations.
-Your code should be bug free, compile and work. Please include instructions to compile and run the API and the Web app in localhost. Hosting (Heroku, AWS, Azure, etc.) is required.
-If your code includes unit tests you may use a unit test framework of your choice.
-The requirement
-We need a web application to create, list, modify and delete employees. The application should consist of a spring RESTful API and a React Typescript frontend. The schema for the employee is left to the criteria of the candidate.
+# Features
 
-React hints:
-Typescript is recommended.
-React hooks are recommended.
-You can include any other open source NPM library.
-Feel free to use your favorite CSS framework.
-Feel free to use your favorite middleware.
-Add some basic validations on the form like required and max length validations.
-The site should be responsive.
-RESTful API hints:
-The list can be a local database, CSV, TXT file or even in memory
-Implementing an API logging strategy.
-Implementing error handling strategy.
-At least 3 endpoints are required:
-To create an employee
-To get a list of existing employees
-To delete an employee
+# Frontend Features
 
-Technology / Documentation Recommendations
-Frontend
-Vite with react-ts
-Use SCSS instead of CSS, npm install sass
-React Form Hook for form validation & submission
-https://react-hook-form.com/get-started
-Use HTML attributes to required / validate fields before writing your own validation
-Typescript React Cheatsheet
-https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_exampleReact Cheat Sheet
-Use Axios over fetch in the frontend for testing mocks
-React Router for routes
-https://reactrouter.com/en/main/start/tutorial
-Mock Axios Calls
-https://stackoverflow.com/questions/70450576/how-to-test-react-component-with-axios-request-in-useeffect
-Backend
-Dependencies
-Spring Web,
-Validation I/O
-Spring Testing
-Spring Data JPA
-MySQL Driver
-Spring Devtools
-application.properties starter:
-spring.datasource.url=jdbc:mysql://localhost:3306/db_name
-spring.datasource.username=root
-spring.datasource.password=MyPass
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-spring.jpa.generate-ddl=true
-Testing
-https://spring.io/guides/gs/testing-web/
-https://www.baeldung.com/spring-mock-rest-template
-Logging
-https://www.baeldung.com/spring-boot-logging
-CORS Errors
-https://www.baeldung.com/spring-cors
-API Semantics
-https://www.uniprot.org/help/rest-api-headers
-https://restfulapi.net/resource-naming/
+1. Employee Management:
+    - Add new employees with personal, contact, and job details.
+    - Edit existing employee details, including job records.
+    - View detailed information about an employee, including job history.
+    - Delete employees from the system.
+
+2. Job Record Management:
+    - Add job records with job type, start date, and end date.
+    - Update job records for existing employees.
+    - Display job history in the employee details page.
+
+3. Form Validations:
+    - Required fields for all employee and job record inputs.
+    - Validation for endDate to ensure it is in the future or present.
+    - Real-time validation feedback for form inputs.
+
+4. Responsive Design:
+    - Fully responsive UI for desktop and mobile devices.
+    - Built using SCSS for styling.
+
+5. React Features:
+    - React hooks for state management and side effects.
+    - React Router for navigation between pages.
+    - Axios for API calls.
+
+6. Error Handling:
+    - User-friendly error messages for failed API calls.
+    - Toast notifications for success and error events.
+
+# Backend Features
+
+1. RESTful API Endpoints:
+    - Create Employee: Add a new employee with job records.
+    - Get All Employees: Retrieve a list of all employees.
+    - Get Employee by ID: Retrieve detailed information about a specific employee.
+    - Update Employee: Update employee details, including job records.
+    - Delete Employee: Remove an employee from the system.
+
+2. Database Integration
+    - MySQL database for storing employee and job record data.
+    - employees table for personal and contact details.
+    - job_records table for job history.
+
+3. Validation
+    - Backend validation for required fields.
+    - Validation for endDate to ensure it is in the future or present.
+
+4. Error Handling
+    - Custom exceptions for handling not found and validation errors.
+    - Proper HTTP status codes for API responses.
+
+5. CORS Configuration
+    - Configured to handle cross-origin requests for frontend-backend communication.
+
+# Technology Stack
+
+# Frontend
+    - Framework: React with TypeScript
+    - Styling: SCSS
+    - State Management: React hooks
+    - Routing: React Router
+    - HTTP Client: Axios
+    - Notification Alert - Toast Notification
+
+# Backend
+    - Framework: Spring Boot
+    - Database: MySQL
+    - ORM: Spring Data JPA
+    - Validation: Hibernate Validator
+
+## Database Schema
+
+# Employees Table
+
+    |Column Name	Data Type	        Description
+    |id	            INT (PK, Auto)	    Primary key for employees.
+    |firstName	    VARCHAR	            Employee's first name.
+    |middleName	    VARCHAR	            Employee's middle name.
+    |lastName	    VARCHAR	            Employee's last name.
+    |email	        VARCHAR	            Employee's email address.
+    |phone	        VARCHAR	            Employee's phone number.
+    |address	    VARCHAR	            Employee's address.
+    |jobStatus	    ENUM	            Full-time or part-time status.
+
+# Job Records Table
+
+    Column Name	    Data Type	        Description
+    id	            INT (PK, Auto)	    Primary key for job records.
+    jobType	        ENUM	            Contract or permanent type.
+    startDate	    DATE	            Job start date.
+    endDate	        DATE	            Job end date.
+    employee_id	    INT (FK)	        Foreign key to employees table.
+
+## API Endpoints
+
+# Employee Endpoints
+
+1. Create Employees
+    - URL: POST /employees
+    - Request Body: 
+        {
+            "firstName": "John",
+            "middleName": "A.",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "phoneNumber": "1234567890",
+            "address": "123 Main St",
+            "jobStatus": "FULL_TIME",
+            "jobRecords": [
+                {
+                    "jobType": "CONTRACT",
+                    "startDate": "2023-01-01",
+                    "endDate": "2023-12-31"
+                }
+            ]
+        }
+
+    - Response: 201 Created
+2.  Get All Employees
+    - URL: GET /employees
+    - Response: List of employees.
+
+3. Get Employee by ID
+    - URL: GET /employees/{id}
+    - Response: Employee details with job records.
+
+4. Update Employee
+    - URL: PATCH /employees/{id}
+    - Request Body: Similar to Create Employee.
+
+5. Delete Employee
+    -URL: DELETE /employees/{id}
+    -Response: 204 No Content
+
+## Setup Instructions
+
+# Backend Setup
+
+1. Install Java 17 and Maven.
+2. Clone the repository.
+3. Configure the database in application.properties:
+    ```
+    spring.datasource.url=jdbc:mysql://localhost:3306/employee_creator
+    spring.datasource.username=root
+    spring.datasource.password=yourpassword
+    spring.jpa.hibernate.ddl-auto=update
+
+    ```
+4. Run the application:
+    ```
+     mvn spring-boot:run
+    ```
+    ## The API will be available at http://localhost:8080.
+
+# Frontend Setup
+
+1. Install Node.js and npm.
+2. Navigate to the frontend directory.
+3. Install dependencies: 
+    ```
+    npm install
+    ```
+
+4. Start the development server:
+    ```
+    npm run dev
+    ```
+
+    ## The app will be available at http://localhost:5173 (or the port shown in your terminal).
 
 
-employees table fields -
-
-Personal Info
-- id (primary key, auto-increment)
-- firstName
-- middleName
-- lastName
-
-Contact details
-- email
-- phone
-- address
-
-Employee status
-- jobType (Contract, permanent)
-- startDate
-- finishDate
-- jobStatus (full-time , part-time)
 

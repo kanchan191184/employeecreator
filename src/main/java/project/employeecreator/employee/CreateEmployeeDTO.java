@@ -1,8 +1,9 @@
 package project.employeecreator.employee;
 
+import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import project.employeecreator.employee.Employee.JobStatus;
-import project.employeecreator.employee.Employee.JobType;
+import project.employeecreator.jobRecord.CreateJobRecordDTO;
 
 public class CreateEmployeeDTO {
    
@@ -23,14 +24,18 @@ public class CreateEmployeeDTO {
     @NotBlank
     private String address;
 
-    private JobType jobType;
-
-    @NotBlank
-    private String startDate;
-
-    private String finishDate;
-
     private JobStatus jobStatus;
+
+    // Add this to accept job records from client
+    private List<CreateJobRecordDTO> jobRecords;
+
+    public List<CreateJobRecordDTO> getJobRecords() {
+        return jobRecords;
+    }
+
+    public void setJobRecords(List<CreateJobRecordDTO> jobRecords) {
+        this.jobRecords = jobRecords;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -78,30 +83,6 @@ public class CreateEmployeeDTO {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public JobType getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(JobType jobType) {
-        this.jobType = jobType;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getFinishDate() {
-        return finishDate;
-    }
-
-    public void setFinishDate(String finishDate) {
-        this.finishDate = finishDate;
     }
 
     public JobStatus getJobStatus() {

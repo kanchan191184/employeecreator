@@ -9,11 +9,7 @@ import EmployeeUpdatePage from './pages/EmployeeUpdatePage';
 import EmployeeDetailsPage from './pages/EmployeeDetailsPage';
 import EmployeeJobStatsPage from './pages/EmployeeJobStatsPage';
 
-// import LoginPage from './pages/LoginPage'
-
 function App() {
-
-
   return (
     <BrowserRouter>
     <ToastContainer />
@@ -28,5 +24,4 @@ function App() {
     </BrowserRouter>
   )
 }
-
-export default App
+export default App;

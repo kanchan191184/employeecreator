@@ -1,82 +1,121 @@
 import { useState, useEffect } from "react";
 import classes from './EmployeeAddForm.module.scss';
 import { useNavigate } from "react-router-dom";
-import { validateForm } from "../utils/validator";
+import { mapBackendErrors, validateForm } from "../utils/validator";
+
+export interface JobRecordFormValues {
+    jobType: "CONTRACT" | "PERMANENT";
+    startDate: string;
+    endDate?: string;
+}
 
 export interface EmployeeFormValues {
     firstName: string;
-    middleName: string;
+    middleName?: string;
     lastName: string;
     email: string;
     phoneNumber: string;
     address: string;
-    jobType: "CONTRACT" | "PERMANENT"; // ⬅ literal types
-    startDate: string;
-    finishDate: string;
-    jobStatus: "FULL_TIME" | "PART_TIME"; // ⬅ literal types
-}
+    jobStatus: "FULL_TIME" | "PART_TIME";
+    jobRecord: JobRecordFormValues;
+    jobRecords?: JobRecordFormValues[];
 
-interface EmployeeFormProps {
-    initialValues: EmployeeFormValues;
-    onSubmit: (data: EmployeeFormValues) => void;
-    submitLabel: string;
 }
+    interface EmployeeFormProps {
+        initialValues: EmployeeFormValues;
+        onSubmit: (data: EmployeeFormValues) => void;
+        submitLabel: string;
+    }
 
 export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: EmployeeFormProps) {
     const [formValues, setFormValues] = useState<EmployeeFormValues>(initialValues);
     const [touched, setTouched] = useState<Record<string, boolean>>({});
-    const [errors, setErrors] = useState<Partial<Record<keyof EmployeeFormValues, string>>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const navigate = useNavigate();
 
     // If initialValues change (e.g. when loading for update), update form
     useEffect(() => {
-        setFormValues(initialValues);
+        // Always ensure jobRecord is present
+        setFormValues({
+            ...initialValues,
+            jobRecord: initialValues.jobRecord ?? {
+                jobType: "CONTRACT",
+                startDate: "",
+                endDate: "",
+            },
+        });
     }, [initialValues]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // Validate form values
         const validation = validateForm(formValues);
         setErrors(validation.errors);
 
-         // Mark all fields as touched to show errors
+        // Mark all fields as touched to show errors
         const allTouched: Record<string, boolean> = {};
         Object.keys(formValues).forEach((key) => {
             allTouched[key] = true;
         });
+
+        // Mark nested fields like jobRecord.startDate as touched
+        Object.keys(formValues.jobRecord).forEach((key) => {
+            allTouched[`jobRecord.${key}`] = true;
+        });
+
         setTouched(allTouched);
 
         if (!validation.isValid) return;
 
-        onSubmit(formValues);
+        try {
+            await onSubmit({
+                ...formValues,
+                jobRecords: [formValues.jobRecord], // ✅ send array to match backend
+            });
+        } catch (error: any) { 
+            if (error.response && error.response.status === 400) {
+                // Map backend errors to form fields
+                const backendErrors = mapBackendErrors(error.response);
+                const validationWithBackendErrors = validateForm(formValues, backendErrors);
+                setErrors(validationWithBackendErrors.errors);
+            } 
+        }
     };
 
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormValues((prev) => ({ ...prev, [name]: value }));
+    const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
 
-        if (touched[name]) {
-            const updatedValues = { ...formValues, [name]: value };
-            const validation = validateForm(updatedValues);
-            setErrors(validation.errors);
+    setFormValues(prev => {
+        const newValues = { ...prev };
+
+        if (name.startsWith("jobRecord.")) {
+        const field = name.split(".")[1] as keyof typeof prev.jobRecord;
+        newValues.jobRecord = {
+            ...prev.jobRecord,
+            [field]: value,
+        };
+        } else {
+        (newValues as any)[name] = value;
         }
+
+        // 🧠 Validate as user types
+        const validation = validateForm(newValues);
+        setErrors(validation.errors);
+
+        return newValues;
+        });
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const { name } = e.target;
-        // setTouched({ ...touched, [name]: true });
-
-        
-        // Mark this field as touched
-        const updatedTouched = { ...touched, [name]: true };
-        setTouched(updatedTouched);
-
-        // Re-validate form to update errors
-        const updatedValues = { ...formValues };
-        const validation = validateForm(updatedValues);
+        setTouched({ ...touched, [name]: true });
+    
+        const validation = validateForm(formValues);
         setErrors(validation.errors);
     };
 
-    const renderError = (field: keyof EmployeeFormValues) => {
+    const renderError = (field: string) => {
         return touched[field] && errors[field] ? (
             <span className={classes.error}>{errors[field]}</span>
         ) : null;
@@ -161,9 +200,9 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
                     <label>
                         <input
                             type="radio"
-                            name="jobType"
+                            name="jobRecord.jobType"
                             value="PERMANENT"
-                            checked={formValues.jobType === "PERMANENT"}
+                            checked={formValues.jobRecord.jobType === "PERMANENT"}
                             onChange={onInputChange}
                         />
                         Permanent
@@ -171,9 +210,9 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
                     <label>
                         <input
                             type="radio"
-                            name="jobType"
+                            name="jobRecord.jobType"
                             value="CONTRACT"
-                            checked={formValues.jobType === "CONTRACT"}
+                            checked={formValues.jobRecord.jobType === "CONTRACT"}
                             onChange={onInputChange}
                         />
                         Contract
@@ -185,24 +224,24 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
                 <input
                     id="startDateInput"
                     type="date"
-                    name="startDate"
-                    value={formValues.startDate}
+                    name="jobRecord.startDate"
+                    value={formValues.jobRecord.startDate}
                     onChange={onInputChange}
                     onBlur={handleBlur}
                 />
-                {renderError("startDate")}
+                {renderError("jobRecord.startDate")}
             </div>
             <div className={classes.field}>
-                <label htmlFor="finishDateInput">Finish Date</label>
+                <label htmlFor="endDateInput">End Date</label>
                 <input
-                    id="finishDateInput"
+                    id="endDateInput"
                     type="date"
-                    name="finishDate"
-                    value={formValues.finishDate}
+                    name="jobRecord.endDate"
+                    value={formValues.jobRecord.endDate}
                     onChange={onInputChange}
                     onBlur={handleBlur}
                 />
-                {renderError("finishDate")}
+                {renderError("jobRecord.endDate")}
             </div>
             <div className={classes.field}>
                 <label>Is this on a Full-time or Part-time basis?</label>
