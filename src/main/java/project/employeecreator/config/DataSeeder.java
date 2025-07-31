@@ -46,8 +46,8 @@ public class DataSeeder {
                 emp2.setAddress("12 Carter road");
                 emp2.setJobStatus(Employee.JobStatus.FULL_TIME);
 
-                emp2.addJobRecord(createJobRecord(Employee.JobType.CONTRACT, "2023-01-15", "2025-08-15"));
-                emp2.addJobRecord(createJobRecord(Employee.JobType.PERMANENT, "2024-01-01", null));
+                emp2.addJobRecord(createJobRecord(Employee.JobType.CONTRACT, "2023-01-15", "2023-08-15"));
+                emp2.addJobRecord(createJobRecord(Employee.JobType.PERMANENT, "2024-01-01", "2025-01-01"));
 
                 Employee emp3 = new Employee();
                 emp3.setFirstName("David");
@@ -58,7 +58,7 @@ public class DataSeeder {
                 emp3.setAddress("12 Market road");
                 emp3.setJobStatus(Employee.JobStatus.PART_TIME);
 
-                emp3.addJobRecord(createJobRecord(Employee.JobType.CONTRACT, "2023-01-15", "2025-08-15"));
+                emp3.addJobRecord(createJobRecord(Employee.JobType.CONTRACT, "2023-01-15", "2023-08-15"));
                 emp3.addJobRecord(createJobRecord(Employee.JobType.PERMANENT, "2024-01-01", null));
 
                 Employee emp4 = new Employee();
@@ -70,7 +70,7 @@ public class DataSeeder {
                 emp4.setAddress("21 Carter road");
                 emp4.setJobStatus(Employee.JobStatus.FULL_TIME);
 
-                emp4.addJobRecord(createJobRecord(Employee.JobType.CONTRACT, "2023-01-15", "2025-08-15"));
+                emp4.addJobRecord(createJobRecord(Employee.JobType.CONTRACT, "2023-01-15", "2023-08-15"));
                 emp4.addJobRecord(createJobRecord(Employee.JobType.PERMANENT, "2024-01-01", null));
 
                 employeeRepository.save(emp1);
