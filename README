@@ -36,6 +36,10 @@ The Employee Creator project is a web application designed to manage employee re
     - User-friendly error messages for failed API calls.
     - Toast notifications for success and error events.
 
+7. AI Chatbot 
+    - Ask HR-related questions like "company policies", "employee benefits", or general queries etc.
+    - The chatbot uses OpenAI's GPT model via spring AI integration.
+
 # Backend Features
 
 1. RESTful API Endpoints:
@@ -61,6 +65,10 @@ The Employee Creator project is a web application designed to manage employee re
 5. CORS Configuration
     - Configured to handle cross-origin requests for frontend-backend communication.
 
+6. AI Chatbot Integration
+    - Users OpenAI via spring AI integration to interact with the chatbot.
+    - Predefined FAQ support.
+
 # Technology Stack
 
 # Frontend
@@ -76,6 +84,7 @@ The Employee Creator project is a web application designed to manage employee re
     - Database: MySQL
     - ORM: Spring Data JPA
     - Validation: Hibernate Validator
+    - AI: Spring AI with OpenAI(GPT)
 
 ## Database Schema
 
@@ -140,6 +149,19 @@ The Employee Creator project is a web application designed to manage employee re
 5. Delete Employee
     -URL: DELETE /employees/{id}
     -Response: 204 No Content
+
+## AI Chatbot Setup
+To set up the AI chatbot, follow these steps:
+
+1. Sign up at OpenAI and get an API key. 
+
+2. Create .env file at root directory and add this to your .env file as OPENAI_KEY.
+    - OPENAI_KEY = "YOUR_OPENAI_API_KEY"
+    - OPENAI_MODEL = gpt-4
+
+3. Chatbot ca answer predefined HR questions like "company policies", "contact HR" 
+4. Other general queries can be answered by the chatbot using the OpenAI API.
+
 
 ## Setup Instructions
 
