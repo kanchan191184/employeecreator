@@ -15,7 +15,8 @@ public class UpdateJobRecordDTO {
     @NotNull
     private LocalDate startDate;
 
-    
+    private Integer hoursPerWeek;
+
     @FutureOrPresent(message = "End date must be in the future or present")
     private LocalDate endDate;
     public Long getId() {
@@ -58,6 +59,8 @@ public class UpdateJobRecordDTO {
         this.employeeId = employeeId;
     }
 
+    
+
     private Long employeeId;
 
      // No-arg constructor
@@ -70,6 +73,14 @@ public class UpdateJobRecordDTO {
         this.startDate = startDate;
         this.endDate = endDate;
         this.employeeId = employeeId;
+    }
+
+    public Integer getHoursPerWeek() {
+        return hoursPerWeek;
+    }
+
+    public void setHoursPerWeek(Integer hoursPerWeek) {
+        this.hoursPerWeek = hoursPerWeek;
     }
 
 }

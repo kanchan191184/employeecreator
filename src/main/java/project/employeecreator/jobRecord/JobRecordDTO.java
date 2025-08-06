@@ -6,6 +6,9 @@ public class JobRecordDTO {
     private String jobType; // or JobType enum
     private LocalDate startDate;
     private LocalDate endDate;
+    private Integer hoursPerWeek;
+
+
     public String getJobType() {
         return jobType;
     }
@@ -23,5 +26,12 @@ public class JobRecordDTO {
     }
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+     public Integer getHoursPerWeek() {
+        return hoursPerWeek;
+    }
+    public void setHoursPerWeek(Integer hoursPerWeek) {
+        this.hoursPerWeek = hoursPerWeek;
     }
 }

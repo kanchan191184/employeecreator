@@ -5,21 +5,6 @@ interface ValidationResult {
     errors: Record<string, string>;
 }
 
-/**
- * Maps backend error messages to form fields.
- */
-// export const mapBackendErrors = (errorResponse: any): Record<string, string> => {
-//     const backendErrors: Record<string, string> = {};
-
-//     if (errorResponse && errorResponse.status === 400) {
-//         const { field, message } = errorResponse.data;
-//         if (field && message) {
-//             backendErrors[field] = message;
-//         }
-//     }
-//     return backendErrors;
-// };
-
   export function mapBackendErrors(response: any): Record<string, string> {
     try {
       const data = response.data;
@@ -36,8 +21,10 @@ interface ValidationResult {
     }
   }
 
-export const validateForm = (values: EmployeeFormValues, 
-    backendErrors: Record<string, string> = {}
+export const validateForm = (
+    values: EmployeeFormValues, 
+    backendErrors: Record<string, string> = {},
+    originalValues?: EmployeeFormValues // Pass original values for comparison
   ) : ValidationResult => {
     const errors: Record<string, string> = { ...backendErrors};
 
@@ -74,9 +61,18 @@ export const validateForm = (values: EmployeeFormValues,
       errors.address = 'Address is required.';
     }
 
-    // Start Date
-    if (!values.jobRecord.startDate) {
-      errors['jobRecord.startDate'] = 'Start date is required.';
+    // start date
+    if (
+        originalValues &&
+        (values.jobRecord.startDate !== originalValues.jobRecord.startDate ||
+            values.jobRecord.endDate !== originalValues.jobRecord.endDate)
+    ) {
+        if (!values.jobRecord.startDate) {
+            errors['jobRecord.startDate'] = 'Start date is required.';
+        }
+        if (!values.jobRecord.endDate) {
+            errors['jobRecord.endDate'] = 'End date is required.';
+        }
     }
 
     // end Date
@@ -84,6 +80,10 @@ export const validateForm = (values: EmployeeFormValues,
       errors['jobRecord.endDate'] = 'End date is required.';
     }
 
+    if(!values.jobRecord.hoursPerWeek) {
+      errors['jobRecord.hoursPerWeek'] = 'Hours per week is required.';
+    }
+    
     return {
       isValid: Object.keys(errors).length === 0,
       errors,

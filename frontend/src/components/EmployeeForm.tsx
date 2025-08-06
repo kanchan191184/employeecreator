@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import classes from './EmployeeAddForm.module.scss';
 import { useNavigate } from "react-router-dom";
 import { mapBackendErrors, validateForm } from "../utils/validator";
+import type { JobRecord } from "./EmployeeCard";
 
 export interface JobRecordFormValues {
     jobType: "CONTRACT" | "PERMANENT";
     startDate: string;
     endDate?: string;
+    hoursPerWeek: number;
 }
 
 export interface EmployeeFormValues {
@@ -25,9 +27,10 @@ export interface EmployeeFormValues {
         initialValues: EmployeeFormValues;
         onSubmit: (data: EmployeeFormValues) => void;
         submitLabel: string;
+        jobHistory?: JobRecord[];
     }
 
-export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: EmployeeFormProps) {
+export default function EmployeeForm({ initialValues, onSubmit, submitLabel, jobHistory = [] }: EmployeeFormProps) {
     const [formValues, setFormValues] = useState<EmployeeFormValues>(initialValues);
     const [touched, setTouched] = useState<Record<string, boolean>>({});
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -37,12 +40,13 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
     useEffect(() => {
         // Always ensure jobRecord is present
         setFormValues({
-            ...initialValues,
-            jobRecord: initialValues.jobRecord ?? {
-                jobType: "CONTRACT",
-                startDate: "",
-                endDate: "",
-            },
+        ...initialValues,
+        jobRecord: {
+            jobType: initialValues.jobRecord?.jobType ?? "CONTRACT",
+            startDate: initialValues.jobRecord?.startDate ?? "",
+            endDate: initialValues.jobRecord?.endDate ?? "",
+            hoursPerWeek: initialValues.jobRecord?.hoursPerWeek ?? 38, // <-- handle default
+        },
         });
     }, [initialValues]);
 
@@ -50,7 +54,7 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
         e.preventDefault();
 
         // Validate form values
-        const validation = validateForm(formValues);
+        const validation = validateForm(formValues, {}, initialValues); // Pass original values
         setErrors(validation.errors);
 
         // Mark all fields as touched to show errors
@@ -66,6 +70,41 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
 
         setTouched(allTouched);
 
+         // ✅ Business Logic Check
+        const jobType = formValues.jobRecord.jobType;
+        const startDate = new Date(formValues.jobRecord.startDate);
+
+        // 1. Check for active contract
+        const activeContract = jobHistory?.find(
+            jr => jr.jobType === "CONTRACT" && !jr.endDate
+        );
+        if (activeContract && jobType === "CONTRACT") {
+            setErrors(prev => ({
+            ...prev,
+            "jobRecord.jobType": "Employee is already assigned to a contract."
+            }));
+            return;
+        }
+
+        
+        // 2. Check new startDate > latest endDate (only if startdate has changed)
+        const latestEndDate = jobHistory
+            ?.filter(jr => jr.endDate)
+            .map(jr => new Date(jr.endDate!))
+            .sort((a, b) => b.getTime() - a.getTime())[0];
+
+        // if (latestEndDate && startDate <= latestEndDate) {
+         if (
+            latestEndDate &&
+            initialValues.jobRecord.startDate !== formValues.jobRecord.startDate && // Check if startDate has changed
+            startDate <= latestEndDate
+        ) {
+            setErrors(prev => ({
+            ...prev,
+            "jobRecord.startDate": "Start date must be after previous job's end date."
+            }));
+            return;
+        }
         if (!validation.isValid) return;
 
         try {
@@ -84,26 +123,46 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+        const { name, value } = e.target;
 
-    setFormValues(prev => {
-        const newValues = { ...prev };
+        setFormValues(prev => {
+            const newValues = { ...prev };
 
-        if (name.startsWith("jobRecord.")) {
-        const field = name.split(".")[1] as keyof typeof prev.jobRecord;
-        newValues.jobRecord = {
-            ...prev.jobRecord,
-            [field]: value,
-        };
-        } else {
-        (newValues as any)[name] = value;
-        }
+            if (name.startsWith("jobRecord.")) {
+            const field = name.split(".")[1];
 
-        // 🧠 Validate as user types
-        const validation = validateForm(newValues);
-        setErrors(validation.errors);
+            if (field === "hoursPerWeek") {
+                // Convert to number and update hours
+                newValues.jobRecord = {
+                ...prev.jobRecord,
+                hoursPerWeek: parseInt(value) || 38,
+                };
+            } else if (field === "jobType") {
+                // Update job type and auto-set hours for PERMANENT
+                const newJobType = value as "PERMANENT" | "CONTRACT";
+                newValues.jobRecord = {
+                ...prev.jobRecord,
+                jobType: newJobType,
+                hoursPerWeek: newJobType === "PERMANENT" ? 38 : 0,
+                };
+            } else {
+                // Default handling for other jobRecord fields
+                newValues.jobRecord = {
+                ...prev.jobRecord,
+                [field]: value,
+                };
+            }
 
-        return newValues;
+            } else {
+            // Non-nested fields like firstName, email, etc.
+            (newValues as any)[name] = value;
+            }
+
+            // 🧠 Validate as user types
+            const validation = validateForm(newValues);
+            setErrors(validation.errors);
+
+            return newValues;
         });
     };
 
@@ -242,6 +301,19 @@ export default function EmployeeForm({ initialValues, onSubmit, submitLabel }: E
                     onBlur={handleBlur}
                 />
                 {renderError("jobRecord.endDate")}
+            </div>
+            <div className={classes.field}>
+                <label htmlFor="hoursPerWeekInput">Hours per Week</label>
+                <input
+                    id="hoursPerWeekInput"
+                    type="number"
+                    name="jobRecord.hoursPerWeek"
+                    value={formValues.jobRecord.hoursPerWeek}
+                    onChange={onInputChange}
+                    onBlur={handleBlur}
+                    disabled={formValues.jobRecord.jobType === "PERMANENT"}
+                />
+                {renderError("jobRecord.hoursPerWeek")}
             </div>
             <div className={classes.field}>
                 <label>Is this on a Full-time or Part-time basis?</label>

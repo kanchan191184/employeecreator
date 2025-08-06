@@ -34,6 +34,9 @@ public class JobRecord {
     @Column
     private LocalDate endDate;
 
+    @Column
+    private Integer hoursPerWeek;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
     @JsonBackReference
@@ -77,5 +80,13 @@ public class JobRecord {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Integer getHoursPerWeek() {
+        return hoursPerWeek;
+    }
+
+    public void setHoursPerWeek(Integer hoursPerWeek) {
+        this.hoursPerWeek = hoursPerWeek;
     } 
 }

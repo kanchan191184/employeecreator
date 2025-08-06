@@ -1,6 +1,7 @@
 import api from "../api/api";
 
 export interface JobRecord {
+  hoursPerWeek: number;
   id: number;
   jobType: 'PERMANENT' | 'CONTRACT';
   startDate: string;

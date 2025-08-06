@@ -12,6 +12,7 @@ const defaultValues: EmployeeFormValues = {
         jobType: 'CONTRACT',
         startDate: '',
         endDate: '', // Use endDate to match the form's structure
+        hoursPerWeek: 0,
     },
 };
 
@@ -19,6 +20,7 @@ export default function EmployeeAddForm({ onFormSubmit }: { onFormSubmit: (data:
     return (
         <EmployeeForm
             initialValues={defaultValues}
+            jobHistory={defaultValues.jobRecords}
             onSubmit={onFormSubmit}
             submitLabel="Register"
         />

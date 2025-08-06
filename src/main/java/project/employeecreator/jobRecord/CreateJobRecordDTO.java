@@ -15,6 +15,7 @@ public class CreateJobRecordDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private Long employeeId;
+    private Integer hoursPerWeek;
 
     // No-arg constructor
     public CreateJobRecordDTO() {}
@@ -68,4 +69,13 @@ public class CreateJobRecordDTO {
         this.employeeId = employeeId;
     }
 
+    public Integer getHoursPerWeek() {
+        return hoursPerWeek;
+    }
+
+    public void setHoursPerWeek(Integer hoursPerWeek) {
+        this.hoursPerWeek = hoursPerWeek;
+    }
+
+    
 }

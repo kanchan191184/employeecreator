@@ -29,6 +29,7 @@ export default function EmployeeUpdateForm({
                 const normalizedJobRecords = jobs.map(job => ({
                     ...job,
                     endDate: job.endDate ?? "", // Fallback to an empty string if undefined
+                    hoursPerWeek: job.hoursPerWeek ?? 0, // Ensure hoursPerWeek is always present
                 }));
 
                  setInitialValues({
@@ -39,11 +40,13 @@ export default function EmployeeUpdateForm({
                             jobType: normalizedJobRecords[0].jobType,
                             startDate: normalizedJobRecords[0].startDate,
                             endDate: normalizedJobRecords[0].endDate,
+                            hoursPerWeek: normalizedJobRecords[0].hoursPerWeek ?? 0,
                         }
                         : {
                             jobType: "CONTRACT",
                             startDate: "",
                             endDate: "",
+                            hoursPerWeek: 0,
                         },
                     jobRecords: normalizedJobRecords,
             });
@@ -95,6 +98,7 @@ export default function EmployeeUpdateForm({
         <EmployeeForm
             initialValues={initialValues}
             onSubmit={handleFormSubmit}
+            jobHistory={initialValues.jobRecords}
             submitLabel="Update Employee"
         />
     );

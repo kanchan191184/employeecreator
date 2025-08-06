@@ -54,7 +54,7 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private JobStatus jobStatus;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.EAGER)
     private List<JobRecord> jobRecords = new ArrayList<>();
 
     public void addJobRecord(JobRecord jr) {

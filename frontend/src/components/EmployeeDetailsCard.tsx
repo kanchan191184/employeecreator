@@ -5,6 +5,7 @@ export interface JobRecord {
   jobType: 'PERMANENT' | 'CONTRACT';
   startDate: string;    
   endDate?: string;    // nullable
+  hoursPerWeek?: number;
 }
 
 export interface Employee {
@@ -50,6 +51,7 @@ const EmployeeDetailsCard: React.FC<EmployeeCardProps> = ({ employee, jobRecords
               <th>Type</th>
               <th>Start Date</th>
               <th>End Date</th>
+              <th>Hours/Week</th>
             </tr>
           </thead>
           <tbody>
@@ -58,6 +60,7 @@ const EmployeeDetailsCard: React.FC<EmployeeCardProps> = ({ employee, jobRecords
                 <td>{jr.jobType.charAt(0) + jr.jobType.slice(1).toLowerCase()}</td>
                 <td>{formatDate(jr.startDate)}</td>
                 <td>{formatDate(jr.endDate)}</td>
+                <td>{jr.hoursPerWeek ?? '-'}</td>
               </tr>
             ))}
           </tbody>
